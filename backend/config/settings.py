@@ -1,3 +1,4 @@
+from datetime import timedelta
 from pathlib import Path
 
 from config.env import get_bool, get_csv, get_env
@@ -16,9 +17,11 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
+    "django_filters",
     "drf_spectacular",
     "core",
     "example_app",
+    "auth_app",
 ]
 
 MIDDLEWARE = [
@@ -76,12 +79,37 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ],
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticated",
+    ],
+    "DEFAULT_FILTER_BACKENDS": [
+        "django_filters.rest_framework.DjangoFilterBackend",
+        "rest_framework.filters.SearchFilter",
+        "rest_framework.filters.OrderingFilter",
+    ],
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 10,
+}
+
+JWT_ACCESS_MINUTES = get_env("JWT_ACCESS_MINUTES", cast=int, default=5)
+JWT_REFRESH_DAYS = get_env("JWT_REFRESH_DAYS", cast=int, default=1)
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=JWT_ACCESS_MINUTES),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=JWT_REFRESH_DAYS),
 }
 
 SPECTACULAR_SETTINGS = {
     "TITLE": "Backend API",
     "DESCRIPTION": "",
     "VERSION": "1.0.0",
+    "SERVE_PERMISSIONS": ["rest_framework.permissions.AllowAny"],
+    "SWAGGER_UI_SETTINGS": {
+        "persistAuthorization": True,
+    },
 }
 
 LOG_LEVEL = get_env("LOG_LEVEL", required=True)

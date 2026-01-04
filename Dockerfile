@@ -12,7 +12,9 @@ WORKDIR /app/backend
 RUN pip install --no-cache-dir \
     Django==5.1.5 \
     djangorestframework==3.15.2 \
+    django-filter==24.3 \
     drf-spectacular==0.28.0 \
+    djangorestframework-simplejwt==5.3.1 \
     psycopg[binary]==3.2.3 \
     prometheus-client==0.21.1
 
@@ -27,4 +29,4 @@ USER app
 
 EXPOSE 8000
 
-CMD ["python", "backend/manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

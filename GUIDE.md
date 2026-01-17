@@ -158,3 +158,9 @@ curl http://localhost/api/items/ \
 - удалить `"django_filters",` из `INSTALLED_APPS`
 - удалить `DEFAULT_FILTER_BACKENDS`, `DEFAULT_PAGINATION_CLASS`, `PAGE_SIZE` из `REST_FRAMEWORK`
 - удалить `filterset_fields/search_fields/ordering_fields` из `ExampleItemViewSet`
+
+
+docker-compose up -d --build
+docker-compose exec web pytest -q
+docker-compose exec web ruff check .
+docker-compose ps
